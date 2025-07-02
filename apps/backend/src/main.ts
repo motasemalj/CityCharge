@@ -7,7 +7,11 @@ async function bootstrap() {
 
   // Enable CORS
   app.enableCors({
-    origin: ['http://localhost:43220', 'http://localhost:3001'], // Allow both frontend ports
+    origin: [
+      'http://localhost:43220', 
+      'http://localhost:3001',
+      'https://city-charge-web.vercel.app'
+    ], // Allow both frontend ports and production URL
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
