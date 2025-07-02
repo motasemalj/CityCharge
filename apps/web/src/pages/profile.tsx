@@ -92,11 +92,11 @@ export default function ProfilePage() {
         api.get('/payment')
       ]);
       
-      setProfile(profileRes.data);
-      setName(profileRes.data.name);
-      setEmail(profileRes.data.email);
-      setSessions(sessionsRes.data);
-      setPayments(paymentsRes.data);
+      setProfile(profileRes.data as { name: string; email: string });
+      setName((profileRes.data as any).name);
+      setEmail((profileRes.data as any).email);
+      setSessions(sessionsRes.data as unknown[]);
+      setPayments(paymentsRes.data as unknown[]);
     } catch (err) {
       setError('Failed to load profile data');
     }

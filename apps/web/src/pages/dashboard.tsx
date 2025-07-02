@@ -90,8 +90,8 @@ export default function Dashboard() {
         api.get('/wallet')
       ]);
 
-      const sessions = sessionsRes.data;
-      const wallet = walletRes.data;
+      const sessions = sessionsRes.data as any[];
+      const wallet = walletRes.data as any;
 
       const stats: DashboardStats = {
         totalSessions: sessions.length,

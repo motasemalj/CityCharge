@@ -182,30 +182,32 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (user?.role === 'admin') {
-      api.get('/charger').then(res => setChargers(res.data));
-      api.get('/admin/users').then(res => setUsers(res.data));
-      api.get('/admin/analytics/purchases').then(res => setTotalPurchases(res.data));
+      api.get('/charger').then(res => setChargers(res.data as any[]));
+      api.get('/admin/users').then(res => setUsers(res.data as any[]));
+      api.get('/admin/analytics/purchases').then(res => setTotalPurchases(res.data as any));
       api.get('/session').then(res => {
-        setAnalytics(a => ({ ...a, sessions: res.data.length, energy: res.data.reduce((sum: number, s: any) => sum + (s.kwhConsumed || 0), 0) }));
+        const sessions = res.data as any[];
+        setAnalytics(a => ({ ...a, sessions: sessions.length, energy: sessions.reduce((sum: number, s: any) => sum + (s.kwhConsumed || 0), 0) }));
         // Sessions per day
         const byDay: Record<string, number> = {};
-        res.data.forEach((s: any) => {
+        sessions.forEach((s: any) => {
           const day = new Date(s.startTime).toLocaleDateString();
           byDay[day] = (byDay[day] || 0) + 1;
         });
         // Removed unused chart states
       });
       api.get('/payment').then(res => {
-        setAnalytics(a => ({ ...a, revenue: res.data.filter((p: any) => p.status === 'completed').reduce((sum: number, p: any) => sum + (p.amount || 0), 0) }));
+        const payments = res.data as any[];
+        setAnalytics(a => ({ ...a, revenue: payments.filter((p: any) => p.status === 'completed').reduce((sum: number, p: any) => sum + (p.amount || 0), 0) }));
         // Revenue per day
         const byDay: Record<string, number> = {};
-        res.data.filter((p: any) => p.status === 'completed').forEach((p: any) => {
+        payments.filter((p: any) => p.status === 'completed').forEach((p: any) => {
           const day = new Date(p.createdAt).toLocaleDateString();
           byDay[day] = (byDay[day] || 0) + p.amount;
         });
         // Removed unused chart states
       });
-      api.get('/reservation/all').then(res => setReservations(res.data));
+      api.get('/reservation/all').then(res => setReservations(res.data as any[]));
     }
   }, [user]);
 
@@ -349,7 +351,7 @@ export default function AdminPage() {
       
       // Refresh users list to show updated balance
       const res = await api.get('/admin/users');
-      setUsers(res.data);
+      setUsers(res.data as any[]);
       
       setWalletDialog(false);
       setSelectedUser(null);
@@ -366,7 +368,7 @@ export default function AdminPage() {
     setSelectedUser(user);
     try {
       const res = await api.get(`/admin/users/${user.id}/transactions`);
-      setUserTransactions(res.data);
+      setUserTransactions(res.data as any[]);
       setTransactionsDialog(true);
     } catch {
       setError('Failed to load user transactions');

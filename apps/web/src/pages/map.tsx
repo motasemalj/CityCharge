@@ -105,7 +105,7 @@ export default function MapPage() {
   const fetchChargers = async () => {
     try {
       const response = await api.get('/charger');
-      const chargersData = response.data.map((charger: any) => ({
+      const chargersData = (response.data as any[]).map((charger: any) => ({
         ...charger,
         rating: 4.2 + Math.random() * 0.8,
         distance: (Math.random() * 10 + 0.5).toFixed(1),

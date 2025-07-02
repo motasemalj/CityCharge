@@ -75,10 +75,10 @@ export default function WalletPage() {
         api.get(`/wallet/transactions`)
       ]);
       console.log('Wallet response:', walletRes.data);
-      console.log('Wallet balance from API:', walletRes.data.balance);
-      setWallet(Number(walletRes.data.balance));
+      console.log('Wallet balance from API:', (walletRes.data as any).balance);
+      setWallet(Number((walletRes.data as any).balance));
       setHistory(
-        transactionsRes.data
+        (transactionsRes.data as any[])
           .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
       );
     } catch (err) {
