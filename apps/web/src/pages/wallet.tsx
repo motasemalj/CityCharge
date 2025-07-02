@@ -214,7 +214,7 @@ export default function WalletPage() {
         '-webkit-overflow-scrolling': 'touch', // Smooth scrolling on iOS
         WebkitOverflowScrolling: 'touch', // Alternative syntax
         pb: 'env(safe-area-inset-bottom)', // Safe area for iOS
-        paddingBottom: { xs: '100px', sm: '90px' }, // Space for bottom nav + safe area
+        paddingBottom: { xs: '140px', sm: '120px' }, // Extra space for bottom nav + safe area
       }}>
         <Box sx={{ 
           p: { xs: 2, sm: 3 }, 

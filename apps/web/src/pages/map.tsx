@@ -68,6 +68,7 @@ interface Charger {
 
 // Add utility functions for map state persistence
 const MAPBOX_STATE_KEY = 'mapbox_view_state';
+const CURRENT_LOCATION_KEY = 'current_location_state';
 
 const saveMapState = (viewState: any) => {
   if (typeof window !== 'undefined') {
@@ -94,6 +95,30 @@ const loadMapState = () => {
   };
 };
 
+const saveCurrentLocation = (location: { lat: number; lng: number } | null) => {
+  if (typeof window !== 'undefined') {
+    if (location) {
+      localStorage.setItem(CURRENT_LOCATION_KEY, JSON.stringify(location));
+    } else {
+      localStorage.removeItem(CURRENT_LOCATION_KEY);
+    }
+  }
+};
+
+const loadCurrentLocation = () => {
+  if (typeof window !== 'undefined') {
+    const saved = localStorage.getItem(CURRENT_LOCATION_KEY);
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.warn('Failed to parse saved current location');
+      }
+    }
+  }
+  return null;
+};
+
 export default function MapPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
@@ -106,7 +131,7 @@ export default function MapPage() {
   const [fetchingChargers, setFetchingChargers] = useState(true);
   const [activeTab, setActiveTab] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-  const [currentLocation, setCurrentLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [currentLocation, setCurrentLocation] = useState<{ lat: number; lng: number } | null>(loadCurrentLocation());
   const [filterForm, setFilterForm] = useState({
     status: 'all',
     connectorType: 'all',
@@ -197,6 +222,11 @@ export default function MapPage() {
   useEffect(() => {
     saveMapState(viewState);
   }, [viewState]);
+
+  // Save current location when it changes
+  useEffect(() => {
+    saveCurrentLocation(currentLocation);
+  }, [currentLocation]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -564,9 +594,18 @@ export default function MapPage() {
       bgcolor: 'background.default',
       position: 'relative',
       overflow: 'hidden',
+      touchAction: 'none', // Prevent default touch behaviors
+      WebkitOverflowScrolling: 'auto', // Disable iOS momentum scrolling
+      userSelect: 'none', // Prevent text selection
     }}>
       {/* Mapbox Map Container */}
-      <Box sx={{ height: '100vh', width: '100%', position: 'relative' }}>
+      <Box sx={{ 
+        height: '100vh', 
+        width: '100%', 
+        position: 'relative',
+        touchAction: 'manipulation', // Allow map touch controls
+        overflow: 'hidden',
+      }}>
         <Map
           ref={mapRef}
           mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
