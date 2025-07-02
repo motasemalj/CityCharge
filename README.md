@@ -1,3 +1,42 @@
+# EV Charging Platform
+
+A scalable, full-stack platform for EV charger discovery, session management, payments, and admin analytics.
+
+## Tech Stack
+- **Backend:** Node.js (NestJS), PostgreSQL, Redis, Stripe, OCPP microservice
+- **Frontend:** Next.js (React), Material-UI, Mapbox
+- **Monorepo:** TurboRepo
+- **Shared:** TypeScript types
+- **Infra:** Docker Compose (PostgreSQL, Redis, pgAdmin)
+
+## Monorepo Structure
+```
+ev_charging_platform/
+  apps/
+    backend/         # NestJS API (REST + WebSocket)
+    ocpp-gateway/    # OCPP microservice
+    web/             # Next.js frontend
+  packages/
+    shared-types/    # TypeScript types shared across apps
+    ui/              # UI components (placeholder)
+    typescript-config/ # TS config
+    eslint-config/     # Lint config
+  infra/             # Docker Compose, DB, Redis, etc.
+  README.md
+  turbo.json
+```
+
+## Quick Start
+1. `cd infra && docker-compose up -d` (start DB/Redis)
+2. Install dependencies: `npm install`
+3. Start backend: `npm run --workspace=apps/backend start:dev`
+4. Start OCPP gateway: `npm run --workspace=apps/ocpp-gateway start`
+5. Start frontend: `npm run --workspace=apps/web dev`
+
+---
+
+See each app's README for more details.
+
 # Turborepo starter
 
 This Turborepo starter is maintained by the Turborepo core team.

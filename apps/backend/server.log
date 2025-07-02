@@ -1,0 +1,150 @@
+
+> backend@0.0.1 start:dev
+> nest start --watch
+
+[2J[3J[H[[90m11:33:12 AM[0m] Starting compilation in watch mode...
+
+[[90m11:33:15 AM[0m] Found 0 errors. Watching for file changes.
+
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +10ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmCoreModule dependencies initialized[39m[38;5;3m +110ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUserModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mChargerModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mSessionModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPaymentModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAdminModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAppController {/}:[39m[38;5;3m +18ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUserController {/user}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/profile, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/profile, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/profile, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mWalletController {/wallet}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/wallet, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/wallet/add-credit, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/wallet/transactions, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mChargerController {/charger}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/charger, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/charger, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/charger/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/charger/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/charger/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mSessionController {/session}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/session, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/session, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/session/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/session/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/session/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mReservationController {/reservation}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/reservation, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/reservation, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/reservation/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/reservation/all, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPaymentController {/payment}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payment, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payment, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payment/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payment/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payment/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payment/checkout-session, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payment/webhook, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payment/debug-wallet-status, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAdminController {/admin}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/users, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/users/:id/role, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/users/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/users/:id/adjust-balance, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/analytics/purchases, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/wallets, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/users/:id/transactions, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/auth}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/register, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/login, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 74791  - [39m06/25/2025, 11:33:16 AM [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +2ms[39m
+[2J[3J[H[[90m11:41:45 AM[0m] File change detected. Starting incremental compilation...
+
+[[90m11:41:46 AM[0m] Found 0 errors. Watching for file changes.
+
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +9ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmCoreModule dependencies initialized[39m[38;5;3m +109ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUserModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mChargerModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mSessionModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPaymentModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAdminModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAppController {/}:[39m[38;5;3m +18ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUserController {/user}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/profile, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/profile, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/user/profile, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mWalletController {/wallet}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/wallet, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/wallet/add-credit, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/wallet/transactions, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mChargerController {/charger}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/charger, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/charger, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/charger/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/charger/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/charger/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mSessionController {/session}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/session, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/session, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/session/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/session/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/session/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mReservationController {/reservation}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/reservation, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/reservation, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/reservation/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/reservation/all, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPaymentController {/payment}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payment, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payment, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payment/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payment/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payment/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payment/checkout-session, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payment/webhook, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/payment/debug-wallet-status, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAdminController {/admin}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/users, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/users/:id/role, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/users/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/users/:id/adjust-balance, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/analytics/purchases, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/wallets, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/users/:id/transactions, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/auth}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/register, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/login, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 75559  - [39m06/25/2025, 11:41:47 AM [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +1ms[39m
