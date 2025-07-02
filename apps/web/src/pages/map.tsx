@@ -66,6 +66,34 @@ interface Charger {
   distance?: string;
 }
 
+// Add utility functions for map state persistence
+const MAPBOX_STATE_KEY = 'mapbox_view_state';
+
+const saveMapState = (viewState: any) => {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(MAPBOX_STATE_KEY, JSON.stringify(viewState));
+  }
+};
+
+const loadMapState = () => {
+  if (typeof window !== 'undefined') {
+    const saved = localStorage.getItem(MAPBOX_STATE_KEY);
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.warn('Failed to parse saved map state');
+      }
+    }
+  }
+  // Default to Dubai location
+  return {
+    longitude: 55.2708,
+    latitude: 25.2048,
+    zoom: 12,
+  };
+};
+
 export default function MapPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
@@ -83,11 +111,7 @@ export default function MapPage() {
     status: 'all',
     connectorType: 'all',
   });
-  const [viewState, setViewState] = useState({
-    longitude: 55.2708, // Dubai longitude
-    latitude: 25.2048,  // Dubai latitude
-    zoom: 12,
-  });
+  const [viewState, setViewState] = useState(loadMapState());
 
   useEffect(() => {
     if (loading) return;
@@ -168,6 +192,11 @@ export default function MapPage() {
       }
     }
   }, [router.query.charger, chargers]);
+
+  // Save map state when it changes
+  useEffect(() => {
+    saveMapState(viewState);
+  }, [viewState]);
 
   const getStatusColor = (status: string) => {
     switch (status) {

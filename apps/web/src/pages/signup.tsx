@@ -14,8 +14,6 @@ import {
   Stack,
   IconButton,
   InputAdornment,
-  BottomNavigation,
-  BottomNavigationAction,
 } from '@mui/material';
 import {
   Bolt,
@@ -28,7 +26,6 @@ import {
   MapOutlined,
   AccountBalanceWallet,
   QrCodeScanner,
-  History,
 } from '@mui/icons-material';
 
 export default function SignupPage() {
@@ -40,7 +37,7 @@ export default function SignupPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [activeTab, setActiveTab] = useState(0); // No active tab for signup
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,7 +108,7 @@ export default function SignupPage() {
         '-webkit-overflow-scrolling': 'touch', // Smooth scrolling on iOS
         WebkitOverflowScrolling: 'touch', // Alternative syntax
         pb: 'env(safe-area-inset-bottom)', // Safe area for iOS
-        paddingBottom: { xs: '100px', sm: '90px' }, // Space for bottom nav + safe area
+        paddingBottom: { xs: '20px', sm: '20px' }, // Space for safe area
       }}>
         {/* Header */}
         <Box sx={{ 
@@ -509,54 +506,7 @@ export default function SignupPage() {
         </Box>
       </Box>
 
-      {/* Bottom Navigation */}
-      <BottomNavigation
-        value={activeTab}
-        onChange={(event, newValue) => {
-          setActiveTab(newValue);
-          switch(newValue) {
-            case 0:
-              router.push('/map');
-              break;
-            case 1:
-              router.push('/wallet');
-              break;
-            case 2:
-              router.push('/qr');
-              break;
-            case 3:
-              router.push('/history');
-              break;
-            case 4:
-              router.push('/profile');
-              break;
-          }
-        }}
-        sx={{
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: { xs: 70, sm: 80 },
-          bgcolor: 'rgba(0,0,0,0.8)',
-          backdropFilter: 'blur(20px)',
-          borderTop: '1px solid rgba(255,255,255,0.1)',
-          pb: 'env(safe-area-inset-bottom)',
-          '& .MuiBottomNavigationAction-root': {
-            color: 'rgba(255,255,255,0.6)',
-            minWidth: 0,
-            '&.Mui-selected': {
-              color: 'primary.main'
-            }
-          }
-        }}
-      >
-        <BottomNavigationAction label="Map" icon={<MapOutlined sx={{ fontSize: { xs: 20, sm: 24 } }} />} />
-        <BottomNavigationAction label="Wallet" icon={<AccountBalanceWallet sx={{ fontSize: { xs: 20, sm: 24 } }} />} />
-        <BottomNavigationAction label="QR" icon={<QrCodeScanner sx={{ fontSize: { xs: 20, sm: 24 } }} />} />
-        <BottomNavigationAction label="History" icon={<History sx={{ fontSize: { xs: 20, sm: 24 } }} />} />
-        <BottomNavigationAction label="Profile" icon={<Person sx={{ fontSize: { xs: 20, sm: 24 } }} />} />
-      </BottomNavigation>
+
     </Box>
   );
 } 

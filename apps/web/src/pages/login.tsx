@@ -97,8 +97,9 @@ export default function LoginPage() {
         // Fallback to map if no token
         router.push('/map');
       }
-    } catch (err) {
-      setError('Login failed');
+    } catch (err: any) {
+      console.error('Login failed:', err);
+      setError(err.message || 'Login failed. Please check your credentials.');
     } finally {
       setLoading(false);
     }
