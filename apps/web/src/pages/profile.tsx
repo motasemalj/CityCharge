@@ -23,7 +23,6 @@ import { useRouter } from 'next/router';
 import api from '../lib/api';
 import {
   Person,
-  Email,
   Edit,
   History,
   Receipt,
@@ -61,13 +60,13 @@ function TabPanel(props: TabPanelProps) {
 export default function ProfilePage() {
   const { user, loading: authLoading, logout } = useAuth();
   const router = useRouter();
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<{ name: string; email: string } | null>(null);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [sessions, setSessions] = useState<any[]>([]);
-  const [payments, setPayments] = useState<any[]>([]);
+  const [sessions, setSessions] = useState<unknown[]>([]);
+  const [payments, setPayments] = useState<unknown[]>([]);
   const [tabValue, setTabValue] = useState(0);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState(3); // Profile is active
@@ -112,9 +111,9 @@ export default function ProfilePage() {
       await api.patch('/user/profile', { name });
       setSuccess('Profile updated successfully!');
       // Update the local profile
-      setProfile({ ...profile, name });
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Update failed');
+      setProfile(profile ? { ...profile, name: name, email: profile.email } : { name, email: '' });
+    } catch (err) {
+      setError('Update failed');
     } finally {
       setLoading(false);
     }
@@ -185,8 +184,8 @@ export default function ProfilePage() {
   if (!user) return null;
 
   const totalSessions = sessions.length;
-  const totalSpent = payments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
-  const totalEnergy = sessions.reduce((sum, s) => sum + (Number(s.kwhConsumed) || 0), 0);
+  const totalSpent = (payments as { amount?: number }[]).reduce((sum, p) => sum + (p.amount || 0), 0);
+  const totalEnergy = (sessions as { kwhConsumed?: number }[]).reduce((sum, s) => sum + (s.kwhConsumed || 0), 0);
 
   return (
     <Box sx={{ 
@@ -429,7 +428,7 @@ export default function ProfilePage() {
                         </Typography>
                       </Box>
                     ) : (
-                      sessions.map((session) => (
+                      (sessions as any[]).map((session, idx) => (
                         <Card key={session.id} className="glassmorphism">
                           <CardContent sx={{ p: { xs: 2.5, sm: 3 } }}>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: { xs: 'column', sm: 'row' }, gap: { xs: 2, sm: 0 } }}>
@@ -513,7 +512,7 @@ export default function ProfilePage() {
                         </Typography>
                       </Box>
                     ) : (
-                      payments.map((payment) => (
+                      (payments as any[]).map((payment, idx) => (
                         <Card key={payment.id} className="glassmorphism">
                           <CardContent sx={{ p: { xs: 2.5, sm: 3 } }}>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: { xs: 'column', sm: 'row' }, gap: { xs: 2, sm: 0 } }}>

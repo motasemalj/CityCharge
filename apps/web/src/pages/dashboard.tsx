@@ -95,15 +95,15 @@ export default function Dashboard() {
 
       const stats: DashboardStats = {
         totalSessions: sessions.length,
-        energyConsumed: sessions.reduce((sum: number, session: any) => sum + (session.kwhConsumed || 0), 0),
-        activeSessions: sessions.filter((s: any) => s.status === 'active').length,
+        energyConsumed: sessions.reduce((sum: number, session: { kwhConsumed?: number }) => sum + (session.kwhConsumed || 0), 0),
+        activeSessions: sessions.filter((s: { status: string }) => s.status === 'active').length,
         walletBalance: Number(wallet.balance) || 0
       };
 
       setStats(stats);
 
       // Mock recent sessions with real data
-      const recent = sessions.slice(0, 5).map((session: any) => ({
+      const recent = sessions.slice(0, 5).map((session: { id: string; chargerId?: string; endTime?: string; startTime: string; cost?: number; status: string }) => ({
         id: session.id,
         chargerName: `Charger #${session.chargerId?.slice(-4) || '0001'}`,
         duration: Math.floor((new Date(session.endTime || Date.now()).getTime() - new Date(session.startTime).getTime()) / 60000),

@@ -70,8 +70,8 @@ export default function SignupPage() {
         // Fallback to map if no token
         router.push('/map');
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Signup failed');
+    } catch (err) {
+      setError('Signup failed');
     } finally {
       setLoading(false);
     }

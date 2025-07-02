@@ -157,12 +157,8 @@ export default function AdminPage() {
   const [success, setSuccess] = useState('');
   const [analytics, setAnalytics] = useState({ sessions: 0, energy: 0, revenue: 0 });
   const [reservations, setReservations] = useState<any[]>([]);
-  const [maxLoad, setMaxLoad] = useState(100); // kW, can be made configurable
+  const [maxLoad] = useState(100); // kW, can be made configurable
   const { notify } = useNotification();
-  const [sessionChart, setSessionChart] = useState<any[]>([]);
-  const [revenueChart, setRevenueChart] = useState<any[]>([]);
-  const [utilChart, setUtilChart] = useState<any[]>([]);
-  const [activeTab, setActiveTab] = useState(0);
   const [addChargerDialog, setAddChargerDialog] = useState(false);
   const [newCharger, setNewCharger] = useState({
     vendor: '',
@@ -182,6 +178,7 @@ export default function AdminPage() {
   const [newBalance, setNewBalance] = useState('');
   const [transactionsDialog, setTransactionsDialog] = useState(false);
   const [userTransactions, setUserTransactions] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
     if (user?.role === 'admin') {
@@ -196,13 +193,7 @@ export default function AdminPage() {
           const day = new Date(s.startTime).toLocaleDateString();
           byDay[day] = (byDay[day] || 0) + 1;
         });
-        setSessionChart(Object.entries(byDay).map(([date, count]) => ({ date, count })));
-        // Utilization per charger
-        const util: Record<string, number> = {};
-        res.data.forEach((s: any) => {
-          util[s.chargerId] = (util[s.chargerId] || 0) + (s.kwhConsumed || 0);
-        });
-        setUtilChart(Object.entries(util).map(([chargerId, kwh]) => ({ chargerId, kwh })));
+        // Removed unused chart states
       });
       api.get('/payment').then(res => {
         setAnalytics(a => ({ ...a, revenue: res.data.filter((p: any) => p.status === 'completed').reduce((sum: number, p: any) => sum + (p.amount || 0), 0) }));
@@ -212,7 +203,7 @@ export default function AdminPage() {
           const day = new Date(p.createdAt).toLocaleDateString();
           byDay[day] = (byDay[day] || 0) + p.amount;
         });
-        setRevenueChart(Object.entries(byDay).map(([date, revenue]) => ({ date, revenue })));
+        // Removed unused chart states
       });
       api.get('/reservation/all').then(res => setReservations(res.data));
     }
@@ -371,13 +362,13 @@ export default function AdminPage() {
     }
   };
 
-  const viewUserTransactions = async (user: any) => {
+  const viewUserTransactions = async (user: { id: string }) => {
     setSelectedUser(user);
     try {
       const res = await api.get(`/admin/users/${user.id}/transactions`);
       setUserTransactions(res.data);
       setTransactionsDialog(true);
-    } catch (err: any) {
+    } catch {
       setError('Failed to load user transactions');
       notify('Failed to load user transactions', 'error');
     }

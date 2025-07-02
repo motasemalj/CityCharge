@@ -40,7 +40,7 @@ export default function WalletPage() {
   const [wallet, setWallet] = useState<number | null>(null);
   const [amount, setAmount] = useState('');
   const [error, setError] = useState('');
-  const [history, setHistory] = useState<any[]>([]);
+  const [history, setHistory] = useState<unknown[]>([]);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState(2); // Wallet is active
   const { notify } = useNotification();
@@ -417,7 +417,7 @@ export default function WalletPage() {
                     </Typography>
                   </Box>
                 ) : (
-                  history.map((transaction) => (
+                  (history as any[]).map((transaction, idx) => (
                     <Card key={transaction.id} className="glassmorphism">
                       <CardContent sx={{ p: { xs: 2.5, sm: 3 } }}>
                         <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>

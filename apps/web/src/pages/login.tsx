@@ -97,8 +97,8 @@ export default function LoginPage() {
         // Fallback to map if no token
         router.push('/map');
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Login failed');
+    } catch (err) {
+      setError('Login failed');
     } finally {
       setLoading(false);
     }
