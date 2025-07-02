@@ -41,10 +41,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string) => {
     const res = await api.post('/auth/login', { email, password });
+    // Type assertion for API response
+    const responseData = res.data as { access_token: string; user: User };
     if (typeof window !== 'undefined') {
-      localStorage.setItem('token', res.data.access_token);
+      localStorage.setItem('token', responseData.access_token);
     }
-    setUser(res.data.user);
+    setUser(responseData.user);
   };
 
   const signup = async (email: string, name: string, password: string) => {
