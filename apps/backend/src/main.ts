@@ -2,6 +2,15 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
+// Polyfill for crypto.randomUUID in Node < 19
+if (!global.crypto) {
+  global.crypto = require('crypto');
+}
+if (!global.crypto.randomUUID) {
+  const { randomUUID } = require('crypto');
+  global.crypto.randomUUID = randomUUID;
+}
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
