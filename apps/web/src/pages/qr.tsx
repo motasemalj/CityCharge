@@ -234,7 +234,7 @@ export default function QRPage() {
                   Enter Manually
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3, fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
-                  Can't scan? Enter the charger ID manually
+                  Can&apos;t scan? Enter the charger ID manually
                 </Typography>
                 
                 <Stack spacing={2}>

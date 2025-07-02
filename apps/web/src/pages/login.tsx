@@ -271,7 +271,7 @@ export default function LoginPage() {
                 sx={{ mt: { xs: 1, sm: 2 } }}
               >
                 <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                  Don't have an account?
+                  Don&apos;t have an account?
                 </Typography>
                 <Link 
                   href="/signup" 

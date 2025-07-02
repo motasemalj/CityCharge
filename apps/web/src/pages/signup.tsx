@@ -443,12 +443,12 @@ export default function SignupPage() {
                 <Typography 
                   variant="h6" 
                   sx={{ 
-                    fontWeight: 600, 
+                    fontWeight: 700, 
                     mb: 2,
                     fontSize: { xs: '1rem', sm: '1.1rem' }
                   }}
                 >
-                  What You'll Get
+                  What You&apos;ll Get
                 </Typography>
                 <Stack spacing={2}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
