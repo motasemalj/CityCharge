@@ -228,6 +228,14 @@ export default function MapPage() {
     saveCurrentLocation(currentLocation);
   }, [currentLocation]);
 
+  // Restore current location when component mounts/router changes
+  useEffect(() => {
+    const savedLocation = loadCurrentLocation();
+    if (savedLocation && !currentLocation) {
+      setCurrentLocation(savedLocation);
+    }
+  }, [router.asPath]); // Trigger when route changes
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'available': return '#30D158';
@@ -590,27 +598,37 @@ export default function MapPage() {
 
   return (
     <Box sx={{ 
-      minHeight: '100vh', 
+      height: ['100vh', '100dvh'], // Use dynamic viewport height for mobile
+      minHeight: ['100vh', '100dvh'],
+      maxHeight: ['100vh', '100dvh'],
       bgcolor: 'background.default',
-      position: 'relative',
+      position: 'fixed', // Fixed position to prevent scrolling
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
       overflow: 'hidden',
       touchAction: 'none', // Prevent default touch behaviors
-      WebkitOverflowScrolling: 'auto', // Disable iOS momentum scrolling
+      WebkitOverflowScrolling: 'touch', // Use touch scrolling but contained
       userSelect: 'none', // Prevent text selection
+      WebkitUserSelect: 'none', // Safari specific
+      WebkitTouchCallout: 'none', // Prevent callout on iOS
+      WebkitTapHighlightColor: 'transparent', // Remove tap highlight
     }}>
       {/* Mapbox Map Container */}
       <Box sx={{ 
-        height: '100vh', 
+        height: ['100vh', '100dvh'], 
         width: '100%', 
         position: 'relative',
         touchAction: 'manipulation', // Allow map touch controls
         overflow: 'hidden',
+        WebkitOverflowScrolling: 'auto', // Prevent momentum scrolling
       }}>
         <Map
           ref={mapRef}
           mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
           mapStyle="mapbox://styles/mapbox/dark-v11"
-          style={{ width: '100%', height: '100vh' }}
+          style={{ width: '100%', height: '100%' }}
           {...viewState}
           onMove={(evt: any) => setViewState(evt.viewState)}
         >
