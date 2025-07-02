@@ -57,7 +57,9 @@ export class SessionService {
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      if (ocppRes.data.status !== 'sent') {
+      // Type assertion to safely access the response data
+      const responseData = ocppRes.data as { status?: string };
+      if (responseData.status !== 'sent') {
         throw new BadRequestException('Failed to start charging on charger');
       }
     } catch (err) {
