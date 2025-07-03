@@ -71,15 +71,54 @@ const AdminMapView = ({ chargers, onAddCharger }: { chargers: any[], onAddCharge
     zoom: 11
   });
 
+  const [searchQuery, setSearchQuery] = useState('');
   const handleMapClick = (event: any) => {
     const { lng, lat } = event.lngLat;
     onAddCharger(lat, lng);
   };
 
+  // Handle search (Mapbox forward geocoding)
+  const handleSearch = async () => {
+    if (!searchQuery) return;
+    try {
+      const resp = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(searchQuery)}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}&limit=1`);
+      const data = await resp.json();
+      if (data.features && data.features.length > 0) {
+        const [lng, lat] = data.features[0].center;
+        setViewState((vs) => ({ ...vs, longitude: lng, latitude: lat, zoom: 14 }));
+      }
+    } catch (err) {
+      console.error('Geocoding failed:', err);
+    }
+  };
+
   return (
     <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2} gap={2}>
         <Typography variant="h6" color="#000">Charger Map View</Typography>
+        {/* Search bar */}
+        <TextField
+          placeholder="Search location…"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
+          size="small"
+          sx={{
+            minWidth: 220,
+            '& .MuiOutlinedInput-root': {
+              borderRadius: '12px',
+              background: 'rgba(255, 255, 255, 0.8)',
+              '& fieldset': { borderColor: 'rgba(148,163,184,0.3)' },
+            }
+          }}
+          InputProps={{
+            endAdornment: (
+              <IconButton onClick={handleSearch} size="small">
+                <Search />
+              </IconButton>
+            )
+          }}
+        />
         <Button 
           variant="contained" 
           startIcon={<Add />}

@@ -190,4 +190,9 @@ a {
 /* Momentum scrolling for WebKit browsers */
 * {
   -webkit-overflow-scrolling: touch;
+}
+
+/* Default input text color to dark for better contrast on light backgrounds */
+.MuiOutlinedInput-input {
+  color: #1e293b;
 } 
