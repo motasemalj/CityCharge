@@ -193,6 +193,11 @@ a {
 }
 
 /* Default input text color to dark for better contrast on light backgrounds */
-.MuiOutlinedInput-input {
-  color: #1e293b;
+.MuiOutlinedInput-input,
+.MuiInputBase-input {
+  color: #1e293b !important;
+}
+
+.MuiInputLabel-root {
+  color: #334155 !important;
 } 

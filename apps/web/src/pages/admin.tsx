@@ -30,7 +30,8 @@ import {
   Tooltip as MuiTooltip,
   LinearProgress,
   Switch,
-  FormControlLabel
+  FormControlLabel,
+  Autocomplete // ADDED
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import api from '../lib/api';
@@ -59,7 +60,8 @@ import {
   Analytics,
   Warning,
   CheckCircle,
-  Cancel
+  Cancel,
+  Logout // ADDED
 } from '@mui/icons-material';
 import Map, { Marker, NavigationControl } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -72,6 +74,7 @@ const AdminMapView = ({ chargers, onAddCharger }: { chargers: any[], onAddCharge
   });
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchOptions, setSearchOptions] = useState<any[]>([]);
   const handleMapClick = (event: any) => {
     const { lng, lat } = event.lngLat;
     onAddCharger(lat, lng);
@@ -81,11 +84,10 @@ const AdminMapView = ({ chargers, onAddCharger }: { chargers: any[], onAddCharge
   const handleSearch = async () => {
     if (!searchQuery) return;
     try {
-      const resp = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(searchQuery)}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}&limit=1`);
+      const resp = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(searchQuery)}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}&limit=5`);
       const data = await resp.json();
-      if (data.features && data.features.length > 0) {
-        const [lng, lat] = data.features[0].center;
-        setViewState((vs) => ({ ...vs, longitude: lng, latitude: lat, zoom: 14 }));
+      if (data.features) {
+        setSearchOptions(data.features.map((f: any) => ({ label: f.place_name, center: f.center })));
       }
     } catch (err) {
       console.error('Geocoding failed:', err);
@@ -97,27 +99,41 @@ const AdminMapView = ({ chargers, onAddCharger }: { chargers: any[], onAddCharge
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2} gap={2}>
         <Typography variant="h6" color="#000">Charger Map View</Typography>
         {/* Search bar */}
-        <TextField
-          placeholder="Search location…"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
-          size="small"
-          sx={{
-            minWidth: 220,
-            '& .MuiOutlinedInput-root': {
-              borderRadius: '12px',
-              background: 'rgba(255, 255, 255, 0.8)',
-              '& fieldset': { borderColor: 'rgba(148,163,184,0.3)' },
+        <Autocomplete
+          freeSolo
+          options={searchOptions}
+          getOptionLabel={(option: any) => option.label || ''}
+          onInputChange={(_, value) => setSearchQuery(value)}
+          onChange={(_, value) => {
+            if (value && value.center) {
+              const [lng, lat] = value.center;
+              setViewState((vs) => ({ ...vs, longitude: lng, latitude: lat, zoom: 14 }));
             }
           }}
-          InputProps={{
-            endAdornment: (
-              <IconButton onClick={handleSearch} size="small">
-                <Search />
-              </IconButton>
-            )
-          }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              placeholder="Search location…"
+              size="small"
+              sx={{
+                minWidth: 260,
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '12px',
+                  background: 'rgba(255, 255, 255, 0.8)',
+                  '& fieldset': { borderColor: 'rgba(148,163,184,0.3)' },
+                  '& .MuiInputBase-input': { color: '#1e293b' }
+                }
+              }}
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <IconButton onClick={handleSearch} size="small">
+                    <Search />
+                  </IconButton>
+                ),
+              }}
+            />
+          )}
         />
         <Button 
           variant="contained" 
@@ -189,7 +205,7 @@ const AdminMapView = ({ chargers, onAddCharger }: { chargers: any[], onAddCharge
 };
 
 export default function AdminPage() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const [chargers, setChargers] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
   const [error, setError] = useState('');
@@ -553,6 +569,9 @@ export default function AdminPage() {
                   <Notifications sx={{ color: '#64748b', fontSize: 20 }} />
                 </Box>
               </Badge>
+              <IconButton onClick={logout} sx={{ p: 1.5 }}>
+                <Logout sx={{ color: '#ef4444' }} />
+              </IconButton>
               <Avatar sx={{ 
                 bgcolor: 'linear-gradient(135deg, #64748b, #475569)',
                 width: 44,
@@ -1497,7 +1516,7 @@ export default function AdminPage() {
                     <TableCell sx={{ color: '#64748b' }}>{c.address}</TableCell>
                     <TableCell>
                       <Chip
-                        label={c.status}
+                        label={c.status.charAt(0).toUpperCase() + c.status.slice(1)}
                         size="small"
                         sx={{
                           background: c.status === 'active' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
