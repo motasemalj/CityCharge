@@ -1,6 +1,18 @@
-import { IsString, IsNumber, IsArray, IsIn, IsOptional } from 'class-validator';
+import { IsString, IsNumber, IsArray, IsIn, IsOptional, IsBoolean, IsDateString } from 'class-validator';
 
 export class UpdateChargerDto {
+  @IsOptional()
+  @IsString()
+  chargePointId?: string;
+
+  @IsOptional()
+  @IsString()
+  serialNumber?: string;
+
+  @IsOptional()
+  @IsString()
+  catalogNumber?: string;
+
   @IsOptional()
   @IsString()
   vendor?: string;
@@ -31,12 +43,40 @@ export class UpdateChargerDto {
   powerKW?: number;
 
   @IsOptional()
+  @IsNumber()
+  ratedVolts?: number;
+
+  @IsOptional()
+  @IsNumber()
+  ratedAmps?: number;
+
+  @IsOptional()
+  @IsNumber()
+  maximumAmps?: number;
+
+  @IsOptional()
+  @IsString()
+  ipAddress?: string;
+
+  @IsOptional()
+  @IsString()
+  targetGroup?: string;
+
+  @IsOptional()
   @IsIn(['available', 'charging', 'out_of_service'])
   status?: string;
 
   @IsOptional()
   @IsNumber()
   pricePerKwh?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  isConnected?: boolean;
+
+  @IsOptional()
+  @IsDateString()
+  lastSeen?: string;
 
   @IsOptional()
   @IsNumber()

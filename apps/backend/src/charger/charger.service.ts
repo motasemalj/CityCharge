@@ -26,11 +26,11 @@ export class ChargerService {
     }
   }
 
-  findAll() {
+  async findAll() {
     return this.chargerRepository.find();
   }
 
-  findOne(id: string) {
+  async findOne(id: string) {
     return this.chargerRepository.findOne({ where: { id } });
   }
 
@@ -57,6 +57,26 @@ export class ChargerService {
     } catch (err) {
       this.logger.error(`Failed to remove charger ${id}`, err.stack);
       throw new BadRequestException('Failed to remove charger');
+    }
+  }
+
+  async updateConnectionStatus(chargePointId: string, isConnected: boolean, lastSeen: Date) {
+    try {
+      await this.chargerRepository.update(
+        { chargePointId },
+        { isConnected, lastSeen }
+      );
+      
+      const updatedCharger = await this.chargerRepository.findOne({ where: { chargePointId } });
+      if (updatedCharger) {
+        this.appGateway.emitChargerUpdate(updatedCharger);
+        this.logger.log(`Updated charger ${chargePointId} connection status: ${isConnected}`);
+      }
+      
+      return { success: true };
+    } catch (err) {
+      this.logger.error(`Failed to update charger ${chargePointId} connection status`, err.stack);
+      throw new BadRequestException('Failed to update charger connection status');
     }
   }
 }

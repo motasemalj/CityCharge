@@ -54,16 +54,28 @@ const Transition = React.forwardRef<unknown, TransitionProps & { children: React
 
 interface Charger {
   id: string;
+  chargePointId: string;
+  serialNumber?: string;
+  catalogNumber?: string;
   vendor: string;
+  model?: string;
   lat: number;
   lng: number;
   address: string;
   connectorTypes: string[];
   powerKW: number;
+  ratedVolts?: number;
+  ratedAmps?: number;
+  maximumAmps?: number;
+  ipAddress?: string;
+  targetGroup?: string;
   status: 'available' | 'charging' | 'out_of_service';
   pricePerKwh: number;
+  isConnected?: boolean;
+  lastSeen?: string;
   rating?: number;
-  distance?: string;
+  reviewCount?: number;
+  distance?: string; // Calculated on frontend
 }
 
 // Add utility functions for map state persistence

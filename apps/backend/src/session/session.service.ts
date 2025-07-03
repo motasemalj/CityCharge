@@ -5,6 +5,7 @@ import { ChargingSession } from './entities/session.entity';
 import { User } from '../user/entities/user.entity';
 import { Payment } from '../payment/entities/payment.entity';
 import { Reservation } from './entities/reservation.entity';
+import { Charger } from '../charger/entities/charger.entity';
 import { AppGateway } from '../app.gateway';
 import { WalletService } from '../user/wallet.service';
 import axios from 'axios';
@@ -21,6 +22,8 @@ export class SessionService {
     private paymentRepository: Repository<Payment>,
     @InjectRepository(Reservation)
     private reservationRepository: Repository<Reservation>,
+    @InjectRepository(Charger)
+    private chargerRepository: Repository<Charger>,
     private readonly appGateway: AppGateway,
     private readonly walletService: WalletService,
     private readonly configService: ConfigService,
@@ -29,6 +32,11 @@ export class SessionService {
   async create(data: Partial<ChargingSession>) {
     // Validate required data
     if (!data.userId) throw new BadRequestException('User ID is required');
+    if (!data.chargerId) throw new BadRequestException('Charger ID is required');
+    
+    // Get charger record to find chargePointId
+    const charger = await this.chargerRepository.findOne({ where: { id: data.chargerId } });
+    if (!charger) throw new BadRequestException('Charger not found');
     
     // Assume cost is provided in data
     const user = await this.userRepository.findOne({ where: { id: data.userId } });
@@ -48,7 +56,7 @@ export class SessionService {
       const ocppRes = await axios.post(
         `${OCPP_GATEWAY_URL}/api/ocpp/send`,
         {
-          chargePointId: data.chargerId,
+          chargePointId: charger.chargePointId, // Use chargePointId from charger record
           command: {
             action: 'RemoteStartTransaction',
             userId: data.userId,
@@ -141,17 +149,24 @@ export class SessionService {
 
   // Handler for OCPP event webhook from gateway
   async handleOcppEvent(event: any) {
+    // Find charger by chargePointId to get the database ID
+    const charger = await this.chargerRepository.findOne({ where: { chargePointId: event.chargePointId } });
+    if (!charger) {
+      console.error(`Charger not found for chargePointId: ${event.chargePointId}`);
+      return;
+    }
+
     // Example: update session status based on OCPP event
     if (event.msg && event.msg.action === 'StartTransaction') {
       // Update session status to 'active'
       await this.sessionRepository.update(
-        { chargerId: event.chargePointId, status: 'active' },
+        { chargerId: charger.id, status: 'active' },
         { status: 'active' }
       );
     } else if (event.msg && event.msg.action === 'StopTransaction') {
       // Update session status to 'completed'
       await this.sessionRepository.update(
-        { chargerId: event.chargePointId, status: 'active' },
+        { chargerId: charger.id, status: 'active' },
         { status: 'completed' }
       );
     }

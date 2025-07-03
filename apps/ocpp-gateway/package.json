@@ -2,9 +2,13 @@
   "name": "ocpp-gateway",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "ts-node index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "start:dev": "ts-node index.ts",
+    "start:prod": "npm run build && npm start",
+    "clean": "rm -rf dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

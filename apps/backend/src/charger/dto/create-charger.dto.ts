@@ -1,11 +1,23 @@
-import { IsString, IsNumber, IsArray, IsIn } from 'class-validator';
+import { IsString, IsNumber, IsArray, IsIn, IsOptional } from 'class-validator';
 
 export class CreateChargerDto {
   @IsString()
-  vendor: string;
+  chargePointId: string;
+
+  @IsOptional()
+  @IsString()
+  serialNumber?: string;
+
+  @IsOptional()
+  @IsString()
+  catalogNumber?: string;
 
   @IsString()
-  model: string;
+  vendor: string;
+
+  @IsOptional()
+  @IsString()
+  model?: string;
 
   @IsNumber()
   lat: number;
@@ -23,8 +35,29 @@ export class CreateChargerDto {
   @IsNumber()
   powerKW: number;
 
+  @IsOptional()
+  @IsNumber()
+  ratedVolts?: number;
+
+  @IsOptional()
+  @IsNumber()
+  ratedAmps?: number;
+
+  @IsOptional()
+  @IsNumber()
+  maximumAmps?: number;
+
+  @IsOptional()
+  @IsString()
+  ipAddress?: string;
+
+  @IsOptional()
+  @IsString()
+  targetGroup?: string;
+
+  @IsOptional()
   @IsIn(['available', 'charging', 'out_of_service'])
-  status: string;
+  status?: string;
 
   @IsNumber()
   pricePerKwh: number;

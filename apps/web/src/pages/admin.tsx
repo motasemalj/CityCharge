@@ -161,6 +161,9 @@ export default function AdminPage() {
   const { notify } = useNotification();
   const [addChargerDialog, setAddChargerDialog] = useState(false);
   const [newCharger, setNewCharger] = useState({
+    chargePointId: '',
+    serialNumber: '',
+    catalogNumber: '',
     vendor: '',
     model: '',
     powerKW: '',
@@ -168,6 +171,11 @@ export default function AdminPage() {
     latitude: '',
     longitude: '',
     connectorType: 'Type2',
+    ratedVolts: '',
+    ratedAmps: '',
+    maximumAmps: '',
+    ipAddress: '',
+    targetGroup: 'Production',
     pricePerKwh: ''
   });
   const [editCharger, setEditCharger] = useState<any>(null);
@@ -256,6 +264,9 @@ export default function AdminPage() {
     setError(''); setSuccess('');
     try {
       const chargerData = {
+        chargePointId: newCharger.chargePointId || `CHG${Date.now()}`, // Generate if not provided
+        serialNumber: newCharger.serialNumber || newCharger.chargePointId,
+        catalogNumber: newCharger.catalogNumber,
         vendor: newCharger.vendor,
         model: newCharger.model,
         powerKW: parseFloat(newCharger.powerKW),
@@ -263,6 +274,11 @@ export default function AdminPage() {
         lng: parseFloat(newCharger.longitude),
         address: newCharger.address,
         connectorTypes: [newCharger.connectorType],
+        ratedVolts: newCharger.ratedVolts ? parseFloat(newCharger.ratedVolts) : undefined,
+        ratedAmps: newCharger.ratedAmps ? parseFloat(newCharger.ratedAmps) : undefined,
+        maximumAmps: newCharger.maximumAmps ? parseFloat(newCharger.maximumAmps) : undefined,
+        ipAddress: newCharger.ipAddress,
+        targetGroup: newCharger.targetGroup || 'Production',
         status: 'available',
         pricePerKwh: parseFloat(newCharger.pricePerKwh)
       };
@@ -271,6 +287,9 @@ export default function AdminPage() {
       setChargers(prev => [...prev, response.data]);
       setAddChargerDialog(false);
       setNewCharger({
+        chargePointId: '',
+        serialNumber: '',
+        catalogNumber: '',
         vendor: '',
         model: '',
         powerKW: '',
@@ -278,6 +297,11 @@ export default function AdminPage() {
         latitude: '',
         longitude: '',
         connectorType: 'Type2',
+        ratedVolts: '',
+        ratedAmps: '',
+        maximumAmps: '',
+        ipAddress: '',
+        targetGroup: 'Production',
         pricePerKwh: ''
       });
       setSuccess('Charger added successfully');
@@ -1531,6 +1555,49 @@ export default function AdminPage() {
         <DialogContent sx={{ pt: 3 }}>
           <Stack spacing={3}>
             <TextField
+              label="Charge Point ID (OCPP)"
+              value={newCharger.chargePointId}
+              onChange={(e) => setNewCharger(prev => ({ ...prev, chargePointId: e.target.value }))}
+              fullWidth
+              placeholder="e.g., JAAL34S021"
+              helperText="Unique identifier for OCPP communication. Will auto-generate if empty."
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '12px',
+                  background: 'rgba(255, 255, 255, 0.8)',
+                  '& fieldset': { borderColor: 'rgba(148, 163, 184, 0.3)' }
+                }
+              }}
+            />
+            <TextField
+              label="Serial Number"
+              value={newCharger.serialNumber}
+              onChange={(e) => setNewCharger(prev => ({ ...prev, serialNumber: e.target.value }))}
+              fullWidth
+              placeholder="e.g., JAAL34S021"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '12px',
+                  background: 'rgba(255, 255, 255, 0.8)',
+                  '& fieldset': { borderColor: 'rgba(148, 163, 184, 0.3)' }
+                }
+              }}
+            />
+            <TextField
+              label="Catalog Number"
+              value={newCharger.catalogNumber}
+              onChange={(e) => setNewCharger(prev => ({ ...prev, catalogNumber: e.target.value }))}
+              fullWidth
+              placeholder="e.g., 8EM1310-3EJ04-0GA0"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '12px',
+                  background: 'rgba(255, 255, 255, 0.8)',
+                  '& fieldset': { borderColor: 'rgba(148, 163, 184, 0.3)' }
+                }
+              }}
+            />
+            <TextField
               label="Vendor"
               value={newCharger.vendor}
               onChange={(e) => setNewCharger(prev => ({ ...prev, vendor: e.target.value }))}
@@ -1573,6 +1640,83 @@ export default function AdminPage() {
                 }
               }}
             />
+            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2 }}>
+              <TextField
+                label="Rated Volts"
+                type="number"
+                value={newCharger.ratedVolts}
+                onChange={(e) => setNewCharger(prev => ({ ...prev, ratedVolts: e.target.value }))}
+                placeholder="e.g., 240"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: '12px',
+                    background: 'rgba(255, 255, 255, 0.8)',
+                    '& fieldset': { borderColor: 'rgba(148, 163, 184, 0.3)' }
+                  }
+                }}
+              />
+              <TextField
+                label="Rated Amps"
+                type="number"
+                value={newCharger.ratedAmps}
+                onChange={(e) => setNewCharger(prev => ({ ...prev, ratedAmps: e.target.value }))}
+                placeholder="e.g., 32"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: '12px',
+                    background: 'rgba(255, 255, 255, 0.8)',
+                    '& fieldset': { borderColor: 'rgba(148, 163, 184, 0.3)' }
+                  }
+                }}
+              />
+              <TextField
+                label="Maximum Amps"
+                type="number"
+                value={newCharger.maximumAmps}
+                onChange={(e) => setNewCharger(prev => ({ ...prev, maximumAmps: e.target.value }))}
+                placeholder="e.g., 32"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: '12px',
+                    background: 'rgba(255, 255, 255, 0.8)',
+                    '& fieldset': { borderColor: 'rgba(148, 163, 184, 0.3)' }
+                  }
+                }}
+              />
+            </Box>
+            <TextField
+              label="IP Address (Optional)"
+              value={newCharger.ipAddress}
+              onChange={(e) => setNewCharger(prev => ({ ...prev, ipAddress: e.target.value }))}
+              fullWidth
+              placeholder="e.g., 192.168.10.143"
+              helperText="For management and diagnostics only"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '12px',
+                  background: 'rgba(255, 255, 255, 0.8)',
+                  '& fieldset': { borderColor: 'rgba(148, 163, 184, 0.3)' }
+                }
+              }}
+            />
+            <TextField
+              select
+              label="Target Group"
+              value={newCharger.targetGroup}
+              onChange={(e) => setNewCharger(prev => ({ ...prev, targetGroup: e.target.value }))}
+              fullWidth
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '12px',
+                  background: 'rgba(255, 255, 255, 0.8)',
+                  '& fieldset': { borderColor: 'rgba(148, 163, 184, 0.3)' }
+                }
+              }}
+            >
+              <MenuItem value="Production">Production</MenuItem>
+              <MenuItem value="Testing">Testing</MenuItem>
+              <MenuItem value="Development">Development</MenuItem>
+            </TextField>
             <TextField
               label="Address"
               value={newCharger.address}

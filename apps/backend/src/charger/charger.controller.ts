@@ -43,5 +43,9 @@ export class ChargerController {
     return this.chargerService.update(id, body);
   }
 
-
+  // Update charger connection status (called by OCPP gateway)
+  @Patch('connection-status')
+  updateConnectionStatus(@Body() body: { chargePointId: string; isConnected: boolean; lastSeen: string }) {
+    return this.chargerService.updateConnectionStatus(body.chargePointId, body.isConnected, new Date(body.lastSeen));
+  }
 }
