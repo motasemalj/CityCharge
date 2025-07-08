@@ -7,6 +7,9 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
+# Install TypeScript globally for building
+RUN npm install -g typescript
+
 # Install all dependencies (including dev dependencies for building)
 RUN npm install
 
@@ -14,7 +17,7 @@ RUN npm install
 COPY . .
 
 # Build the application
-RUN npx tsc
+RUN tsc
 
 # Production stage
 FROM node:20-alpine AS production
