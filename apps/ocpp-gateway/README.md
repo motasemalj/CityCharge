@@ -101,7 +101,7 @@ While not required for OCPP communication, IP addresses can be helpful for:
 ```bash
 # OCPP Gateway
 PORT=3001                 # HTTP and WebSocket server port
-JWT_SECRET=your-secret   # Authentication
+OCPP_GATEWAY_JWT=your-secret   # Authentication (must match backend)
 BACKEND_URL=https://your-backend-domain.com
 NODE_ENV=production
 ```
@@ -118,7 +118,7 @@ NODE_ENV=production
    ```
 
 2. **Set Environment Variables**
-   - `JWT_SECRET`: Strong secret key for authentication
+   - `OCPP_GATEWAY_JWT`: Strong secret key for authentication (must match backend)
    - `BACKEND_URL`: URL of your deployed backend service
    - `PORT`: 3001 (HTTP and WebSocket server)
 

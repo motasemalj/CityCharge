@@ -12,7 +12,7 @@ import axios from 'axios';
 dotenv.config();
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3001;
-const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';
+const JWT_SECRET = process.env.OCPP_GATEWAY_JWT || process.env.JWT_SECRET || 'supersecret';
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3000';
 
 // Store charger connections by chargePointId
@@ -161,7 +161,7 @@ server.listen(PORT, () => {
 
 // --- Notes ---
 // - Use HTTPS/WSS in production (Railway will provide SSL termination)
-// - Set PORT, JWT_SECRET, BACKEND_URL in environment variables
+// - Set PORT, OCPP_GATEWAY_JWT, BACKEND_URL in environment variables
 // - Use /api/ocpp/send to send commands to chargers
 // - OCPP message parsing/validation should be extended for production use
 // - Chargers connect TO this gateway using: wss://gateway-url/ocpp/{chargePointId} 
