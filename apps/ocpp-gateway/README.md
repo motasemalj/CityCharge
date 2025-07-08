@@ -100,27 +100,64 @@ While not required for OCPP communication, IP addresses can be helpful for:
 
 ```bash
 # OCPP Gateway
-PORT=3001                 # REST API port
-WSS_PORT=3002            # WebSocket server port
+PORT=3001                 # HTTP and WebSocket server port
 JWT_SECRET=your-secret   # Authentication
-BACKEND_URL=http://backend:3000
+BACKEND_URL=https://your-backend-domain.com
+NODE_ENV=production
+```
 
-# For production, use WSS (secure WebSocket)
-WSS_PORT=443             # Standard HTTPS port
-USE_SSL=true
+### Deployment Steps
+
+1. **Deploy the OCPP Gateway as a separate service**
+   ```bash
+   # Navigate to the OCPP gateway directory
+   cd apps/ocpp-gateway
+   
+   # Deploy to Railway (or your preferred platform)
+   railway up
+   ```
+
+2. **Set Environment Variables**
+   - `JWT_SECRET`: Strong secret key for authentication
+   - `BACKEND_URL`: URL of your deployed backend service
+   - `PORT`: 3001 (HTTP and WebSocket server)
+
+3. **Update Backend Configuration**
+   Set `OCPP_GATEWAY_URL` in your backend to point to the deployed gateway
+
+### Railway Deployment
+
+The gateway includes a `railway.toml` configuration file. Simply run:
+```bash
+railway login
+railway link  # Link to your project
+railway up    # Deploy
 ```
 
 ### Charger Connection URL Examples
 
 Development:
 ```
-ws://localhost:3002/ocpp/JAAL34S021
+ws://localhost:3001/ocpp/JAAL34S021
 ```
 
 Production:
 ```
-wss://your-ocpp-gateway.com/ocpp/JAAL34S021
+wss://ocpp-server-production.up.railway.app/ocpp/JAAL34S021
 ```
+
+### Configure Your Siemens Charger
+
+Once deployed, configure your Siemens charger (JAAL34S021) with:
+
+1. **Access charger web interface**: `http://192.168.10.143`
+2. **Set OCPP Configuration**:
+   - **Central System URL**: `wss://ocpp-server-production.up.railway.app/ocpp/JAAL34S021`
+   - **Charge Point ID**: `JAAL34S021`
+   - **OCPP Version**: `1.6-J`
+   - **Heartbeat Interval**: `30` seconds
+
+**That's it!** The charger will connect to your gateway automatically.
 
 ## Connection Flow
 

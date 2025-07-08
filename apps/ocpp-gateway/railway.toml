@@ -1,0 +1,12 @@
+[build]
+builder = "dockerfile"
+dockerfile = "Dockerfile"
+
+[deploy]
+startCommand = "npm run start:prod"
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 10
+
+[env]
+PORT = "3001"
+NODE_ENV = "production" 

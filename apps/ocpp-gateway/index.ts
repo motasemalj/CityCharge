@@ -12,13 +12,8 @@ import axios from 'axios';
 dotenv.config();
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3001;
-const WSS_PORT = process.env.WSS_PORT ? parseInt(process.env.WSS_PORT) : 3002;
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3000';
-
-// --- OCPP WebSocket Server ---
-const wss = new WebSocketServer({ port: WSS_PORT });
-console.log(`[OCPP] WebSocket server listening on wss://localhost:${WSS_PORT}`);
 
 // Store charger connections by chargePointId
 const chargerConnections: Record<string, WebSocket> = {};
@@ -36,61 +31,6 @@ async function updateChargerConnectionStatus(chargePointId: string, isConnected:
     console.error(`[OCPP] Failed to update charger ${chargePointId} connection status:`, error);
   }
 }
-
-wss.on('connection', (ws, req) => {
-  // Extract chargePointId from URL (e.g., ws://host/ocpp/CP123)
-  const urlParts = req.url?.split('/') || [];
-  const chargePointId = urlParts[urlParts.length - 1] || `cp_${Date.now()}`;
-  chargerConnections[chargePointId] = ws;
-  console.log(`[OCPP] Charger connected: ${chargePointId}`);
-
-  // Update connection status in backend
-  updateChargerConnectionStatus(chargePointId, true);
-
-  ws.on('message', async (data) => {
-    // Parse OCPP message (assume JSON for simplicity)
-    let msg;
-    try {
-      msg = JSON.parse(data.toString());
-    } catch (e) {
-      console.error('[OCPP] Invalid message:', data.toString());
-      return;
-    }
-    console.log(`[OCPP] Message from ${chargePointId}:`, msg);
-
-    // Forward event to backend
-    try {
-      await axios.post(`${BACKEND_URL}/api/ocpp/event`, {
-        chargePointId,
-        msg,
-      });
-    } catch (err) {
-      console.error('[OCPP] Failed to forward event to backend:', err);
-    }
-  });
-
-  ws.on('close', () => {
-    console.log(`[OCPP] Charger disconnected: ${chargePointId}`);
-    delete chargerConnections[chargePointId];
-    
-    // Update connection status in backend
-    updateChargerConnectionStatus(chargePointId, false);
-  });
-
-  // Send heartbeat every 30 seconds to keep connection alive
-  const heartbeatInterval = setInterval(() => {
-    if (ws.readyState === WebSocket.OPEN) {
-      ws.ping();
-      updateChargerConnectionStatus(chargePointId, true);
-    } else {
-      clearInterval(heartbeatInterval);
-    }
-  }, 30000);
-
-  ws.on('close', () => {
-    clearInterval(heartbeatInterval);
-  });
-});
 
 // --- Express REST API ---
 const app = express();
@@ -147,13 +87,74 @@ app.post('/api/ocpp/event', (req, res) => {
 
 // Start REST API server
 const server = http.createServer(app);
+
+// --- OCPP WebSocket Server (same port as HTTP) ---
+const wss = new WebSocketServer({ server, path: '/ocpp' });
+console.log(`[OCPP] WebSocket server listening on same port as HTTP (${PORT})`);
+
+wss.on('connection', (ws: WebSocket, req: any) => {
+  // Extract chargePointId from URL (e.g., ws://host/ocpp/CP123)
+  const urlParts = req.url?.split('/') || [];
+  const chargePointId = urlParts[urlParts.length - 1] || `cp_${Date.now()}`;
+  chargerConnections[chargePointId] = ws;
+  console.log(`[OCPP] Charger connected: ${chargePointId}`);
+
+  // Update connection status in backend
+  updateChargerConnectionStatus(chargePointId, true);
+
+  ws.on('message', async (data: any) => {
+    // Parse OCPP message (assume JSON for simplicity)
+    let msg;
+    try {
+      msg = JSON.parse(data.toString());
+    } catch (e) {
+      console.error('[OCPP] Invalid message:', data.toString());
+      return;
+    }
+    console.log(`[OCPP] Message from ${chargePointId}:`, msg);
+
+    // Forward event to backend
+    try {
+      await axios.post(`${BACKEND_URL}/api/ocpp/event`, {
+        chargePointId,
+        msg,
+      });
+    } catch (err) {
+      console.error('[OCPP] Failed to forward event to backend:', err);
+    }
+  });
+
+  ws.on('close', () => {
+    console.log(`[OCPP] Charger disconnected: ${chargePointId}`);
+    delete chargerConnections[chargePointId];
+    
+    // Update connection status in backend
+    updateChargerConnectionStatus(chargePointId, false);
+  });
+
+  // Send heartbeat every 30 seconds to keep connection alive
+  const heartbeatInterval = setInterval(() => {
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.ping();
+      updateChargerConnectionStatus(chargePointId, true);
+    } else {
+      clearInterval(heartbeatInterval);
+    }
+  }, 30000);
+
+  ws.on('close', () => {
+    clearInterval(heartbeatInterval);
+  });
+});
+
 server.listen(PORT, () => {
   console.log(`[REST] API server listening on http://localhost:${PORT}`);
+  console.log(`[OCPP] WebSocket server ready at ws://localhost:${PORT}/ocpp/`);
 });
 
 // --- Notes ---
 // - Use HTTPS/WSS in production (Railway will provide SSL termination)
-// - Set PORT, WSS_PORT, JWT_SECRET, BACKEND_URL in .env
+// - Set PORT, JWT_SECRET, BACKEND_URL in environment variables
 // - Use /api/ocpp/send to send commands to chargers
 // - OCPP message parsing/validation should be extended for production use
-// - Chargers connect TO this gateway using: ws://gateway-url:WSS_PORT/ocpp/{chargePointId} 
+// - Chargers connect TO this gateway using: wss://gateway-url/ocpp/{chargePointId} 
