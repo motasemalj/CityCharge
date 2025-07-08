@@ -89,15 +89,22 @@ app.post('/api/ocpp/event', (req, res) => {
 const server = http.createServer(app);
 
 // --- OCPP WebSocket Server (same port as HTTP) ---
-const wss = new WebSocketServer({ server, path: '/ocpp' });
+const wss = new WebSocketServer({ server });
 console.log(`[OCPP] WebSocket server listening on same port as HTTP (${PORT})`);
 
 wss.on('connection', (ws: WebSocket, req: any) => {
+  // Check if this is an OCPP connection (URL should start with /ocpp/)
+  if (!req.url || !req.url.startsWith('/ocpp/')) {
+    console.log(`[OCPP] Invalid WebSocket path: ${req.url}`);
+    ws.close(1000, 'Invalid path - OCPP connections must use /ocpp/{chargePointId}');
+    return;
+  }
+
   // Extract chargePointId from URL (e.g., ws://host/ocpp/CP123)
-  const urlParts = req.url?.split('/') || [];
-  const chargePointId = urlParts[urlParts.length - 1] || `cp_${Date.now()}`;
+  const urlParts = req.url.split('/');
+  const chargePointId = urlParts[2] || `cp_${Date.now()}`; // /ocpp/CHARGER_ID
   chargerConnections[chargePointId] = ws;
-  console.log(`[OCPP] Charger connected: ${chargePointId}`);
+  console.log(`[OCPP] Charger connected: ${chargePointId} (from ${req.url})`);
 
   // Update connection status in backend
   updateChargerConnectionStatus(chargePointId, true);
