@@ -10,6 +10,7 @@ import { AppGateway } from '../app.gateway';
 import { WalletService } from '../user/wallet.service';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class SessionService {
@@ -51,8 +52,19 @@ export class SessionService {
     // --- OCPP Gateway Integration ---
     const OCPP_GATEWAY_URL = this.configService.get<string>('OCPP_GATEWAY_URL') || 'http://localhost:3001';
     const JWT_SECRET = this.configService.get<string>('OCPP_GATEWAY_JWT') || 'supersecret';
-    const token = JWT_SECRET; // For demo, use secret directly; in prod, sign a JWT
+    
+    // Generate proper JWT token
+    const token = jwt.sign(
+      { 
+        service: 'backend',
+        timestamp: Date.now() 
+      }, 
+      JWT_SECRET, 
+      { expiresIn: '1h' }
+    );
+    
     try {
+      console.log(`[OCPP] Sending command to ${OCPP_GATEWAY_URL} for charger ${charger.chargePointId}`);
       const ocppRes = await axios.post(
         `${OCPP_GATEWAY_URL}/api/ocpp/send`,
         {
@@ -63,15 +75,25 @@ export class SessionService {
             sessionId: undefined, // Will be set after session is created
           },
         },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { 
+          headers: { Authorization: `Bearer ${token}` },
+          timeout: 5000 // 5 second timeout
+        }
       );
       // Type assertion to safely access the response data
       const responseData = ocppRes.data as { status?: string };
       if (responseData.status !== 'sent') {
         throw new BadRequestException('Failed to start charging on charger');
       }
-    } catch (err) {
-      throw new BadRequestException('Failed to communicate with OCPP gateway');
+    } catch (err: any) {
+      console.error('[OCPP] Gateway communication failed:', {
+        url: OCPP_GATEWAY_URL,
+        chargePointId: charger.chargePointId,
+        error: err.message,
+        response: err.response?.data,
+        status: err.response?.status
+      });
+      throw new BadRequestException(`Failed to communicate with OCPP gateway: ${err.message}`);
     }
     // --- End OCPP Gateway Integration ---
     
