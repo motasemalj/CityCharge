@@ -138,26 +138,53 @@ railway up    # Deploy
 
 Development:
 ```
-ws://localhost:3001/ocpp/JAAL34S021
+ws://localhost:3001/ocpp/[YOUR_CHARGER_ID]
 ```
 
 Production:
 ```
-wss://ocpp-server-production.up.railway.app/ocpp/JAAL34S021
+wss://ocpp-server-production.up.railway.app/ocpp/[YOUR_CHARGER_ID]
 ```
 
-### Configure Your Siemens Charger
+**Replace `[YOUR_CHARGER_ID]` with your actual charger identifier:**
+- Serial number (e.g., `JAAL34S021`)
+- MAC address (e.g., `00:1A:2B:3C:4D:5E`)
+- Custom ID (e.g., `STATION_001`, `PARKING_LOT_A_01`)
 
-Once deployed, configure your Siemens charger (JAAL34S021) with:
+### Configure Any OCPP Charger
 
-1. **Access charger web interface**: `http://192.168.10.143`
+Once deployed, configure your OCPP charger with:
+
+1. **Access charger web interface**: `http://[YOUR_CHARGER_IP]`
 2. **Set OCPP Configuration**:
-   - **Central System URL**: `wss://ocpp-server-production.up.railway.app/ocpp/JAAL34S021`
-   - **Charge Point ID**: `JAAL34S021`
-   - **OCPP Version**: `1.6-J`
+   - **Central System URL**: `wss://ocpp-server-production.up.railway.app/ocpp/[YOUR_CHARGER_ID]`
+   - **Charge Point ID**: `[YOUR_CHARGER_ID]` (e.g., serial number, MAC address, or custom ID)
+   - **OCPP Version**: `1.6-J` or `2.0.1`
    - **Heartbeat Interval**: `30` seconds
 
-**That's it!** The charger will connect to your gateway automatically.
+**Examples:**
+- Siemens: `wss://ocpp-server-production.up.railway.app/ocpp/JAAL34S021`
+- ABB: `wss://ocpp-server-production.up.railway.app/ocpp/ABB_Terra_001`
+- Any charger: `wss://ocpp-server-production.up.railway.app/ocpp/MY_CHARGER_123`
+
+**That's it!** Any OCPP-compliant charger will connect automatically.
+
+### Testing WebSocket Connections
+
+You can test the OCPP gateway with any charger ID using the included test script:
+
+```bash
+# Test with default ID
+node test-websocket.js
+
+# Test with custom charger ID
+node test-websocket.js MY_CHARGER_123
+node test-websocket.js SIEMENS_001
+node test-websocket.js ABB_TERRA_AC_50
+
+# Test with your actual charger serial number
+node test-websocket.js JAAL34S021
+```
 
 ## Connection Flow
 

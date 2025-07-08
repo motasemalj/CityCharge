@@ -1,10 +1,15 @@
+// Test OCPP WebSocket connection
+// Usage: node test-websocket.js [CHARGER_ID]
+// Example: node test-websocket.js MY_CHARGER_001
+
 const WebSocket = require('ws');
 
-const ws = new WebSocket('wss://ocpp-server-production.up.railway.app/ocpp/');
+const chargerId = process.argv[2] || 'TEST_CHARGER_001';
+const ws = new WebSocket(`wss://ocpp-server-production.up.railway.app/ocpp/${chargerId}`);
 
 ws.on('open', function open() {
   console.log('✅ WebSocket connection opened successfully!');
-  console.log('Connected to: wss://ocpp-server-production.up.railway.app/ocpp/');
+  console.log(`Connected as charger: ${chargerId}`);
   
   // Send a test OCPP message
   const testMessage = {
