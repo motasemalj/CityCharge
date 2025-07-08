@@ -17,20 +17,20 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@types/node": "^22.15.32",
     "axios": "^1.10.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.8.2",
     "ws": "^8.17.1"
   },
   "devDependencies": {
+    "@types/node": "^22.15.32",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.7",
-    "@types/ws": "^8.18.1"
+    "@types/ws": "^8.18.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
   }
 }
