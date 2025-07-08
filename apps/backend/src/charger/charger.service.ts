@@ -14,6 +14,17 @@ export class ChargerService {
   ) {}
 
   async create(data: Partial<Charger>) {
+    // Ensure chargePointId matches serialNumber if serialNumber is provided
+    if (data.serialNumber) {
+      if (data.chargePointId && data.chargePointId !== data.serialNumber) {
+        throw new BadRequestException('chargePointId must match serialNumber');
+      }
+      data.chargePointId = data.serialNumber;
+    }
+    // If neither chargePointId nor serialNumber supplied, reject
+    if (!data.chargePointId) {
+      throw new BadRequestException('chargePointId or serialNumber is required');
+    }
     try {
       const charger = this.chargerRepository.create(data);
       const saved = await this.chargerRepository.save(charger);
