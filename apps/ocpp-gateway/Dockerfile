@@ -7,17 +7,14 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install TypeScript globally for building
-RUN npm install -g typescript
-
 # Install all dependencies (including dev dependencies for building)
 RUN npm install
 
 # Copy source code
 COPY . .
 
-# Build the application
-RUN tsc
+# Build the application using npm script which uses locally installed TypeScript
+RUN npm run build
 
 # Production stage
 FROM node:20-alpine AS production
