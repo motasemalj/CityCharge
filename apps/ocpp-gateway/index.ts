@@ -89,7 +89,17 @@ app.post('/api/ocpp/event', (req, res) => {
 const server = http.createServer(app);
 
 // --- OCPP WebSocket Server (same port as HTTP) ---
-const wss = new WebSocketServer({ server });
+// Accept only OCPP 1.6J sub-protocol when it is requested by the client.
+// ABB chargers send `Sec-WebSocket-Protocol: ocpp1.6` during the handshake.
+// If we do not echo it back the charger will immediately abort the connection.
+const wss = new WebSocketServer({
+  server,
+  handleProtocols: (protocols /* Set<string> */, _request /* IncomingMessage */) => {
+    if (protocols.has('ocpp1.6')) return 'ocpp1.6';
+    // If the charger did not request ocpp1.6 we are not compatible.
+    return false;
+  },
+});
 console.log(`[OCPP] WebSocket server listening on same port as HTTP (${PORT})`);
 
 wss.on('connection', (ws: WebSocket, req: any) => {
@@ -110,21 +120,59 @@ wss.on('connection', (ws: WebSocket, req: any) => {
   updateChargerConnectionStatus(chargePointId, true);
 
   ws.on('message', async (data: any) => {
-    // Parse OCPP message (assume JSON for simplicity)
-    let msg;
+    // OCPP-J frames are pure JSON arrays.       
+    let frame: any;
     try {
-      msg = JSON.parse(data.toString());
+      frame = JSON.parse(data.toString());
     } catch (e) {
-      console.error('[OCPP] Invalid message:', data.toString());
+      console.error('[OCPP] Invalid JSON frame:', data.toString());
       return;
     }
-    console.log(`[OCPP] Message from ${chargePointId}:`, msg);
 
-    // Forward event to backend
+    if (!Array.isArray(frame) || frame.length < 3) {
+      console.error('[OCPP] Malformed OCPP frame:', frame);
+      return;
+    }
+
+    console.log(`[OCPP] Frame from ${chargePointId}:`, frame);
+
+    const [messageTypeId, uniqueId] = frame;
+
+    // Handle CALL messages from charger that require immediate CALLRESULT response
+    if (messageTypeId === 2 /* CALL */) {
+      const action = frame[2];
+
+      let responsePayload: any = {};
+      switch (action) {
+        case 'BootNotification':
+          responsePayload = {
+            status: 'Accepted',
+            currentTime: new Date().toISOString(),
+            interval: 300, // seconds until next Heartbeat
+          };
+          break;
+        case 'Heartbeat':
+          responsePayload = {
+            currentTime: new Date().toISOString(),
+          };
+          break;
+        case 'StatusNotification':
+          responsePayload = {};
+          break;
+        default:
+          // For unsupported actions we still have to reply with an empty payload to acknowledge.
+          responsePayload = {};
+      }
+
+      const callResult = [3 /* CALLRESULT */, uniqueId, responsePayload];
+      ws.send(JSON.stringify(callResult));
+    }
+
+    // Forward every frame (raw) to backend for persistence/analytics.
     try {
       await axios.post(`${BACKEND_URL}/api/ocpp/event`, {
         chargePointId,
-        msg,
+        msg: frame,
       });
     } catch (err) {
       console.error('[OCPP] Failed to forward event to backend:', err);
