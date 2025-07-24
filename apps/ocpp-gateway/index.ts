@@ -12,7 +12,7 @@ import axios from 'axios';
 dotenv.config();
 
 // ---- ENV -------------------------------------------------------------------
-const PORT = process.env.PORT ? parseInt(process.env.PORT) : 80; // Railway injects this
+const PORT = process.env.PORT ? parseInt(process.env.PORT) : 8080; // Railway injects this
 const JWT_SECRET =
   process.env.OCPP_GATEWAY_JWT || process.env.JWT_SECRET || 'supersecret';
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3000';
