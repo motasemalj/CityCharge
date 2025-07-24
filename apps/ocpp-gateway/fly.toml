@@ -1,0 +1,32 @@
+# fly.toml app configuration file generated for ocpp-gateway on 2025-07-24T08:49:25+04:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'ocpp-gateway'
+primary_region = 'sin'
+
+[build]
+
+# Expose port 80 for unencrypted WebSocket (ABB requirement)
+[[services]]
+  internal_port = 8080
+  protocol = 'tcp'
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+  [[services.ports]]
+    port = 80
+    handlers = ['http']
+    force_https = false
+
+  [[services.ports]]
+    port = 443
+    handlers = ['http', 'tls']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1

@@ -102,6 +102,16 @@ server.on('upgrade', (req, _socket) => {
   console.log('[UPGRADE]', req.url, req.headers.host, req.headers['sec-websocket-protocol']);
 });
 
+// Log all incoming HTTP requests
+server.on('request', (req, res) => {
+  console.log('[HTTP]', req.method, req.url, 'from', req.socket.remoteAddress);
+});
+
+// Log all connection events
+server.on('connection', (socket) => {
+  console.log('[TCP] New connection from', socket.remoteAddress, socket.remotePort);
+});
+
 // ---- WEBSOCKET SERVER ------------------------------------------------------
 const wss = new WebSocketServer({
   server,
