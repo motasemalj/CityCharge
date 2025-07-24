@@ -1,4 +1,10 @@
-// OCPP Gateway Microservice Entry Point
+// OCPP Gateway Microservice – fixed version
+// -----------------------------------------------------------
+// ❶ Listens on the dynamic PORT Railway injects
+// ❷ Echoes the exact ocpp1.6 sub‑protocol even when ABB sends “ocpp1.6, ocpp1.5”
+// ❸ Accepts either /ocpp/{id} or /webServices/ocpp/{id} paths
+// ❹ Removes duplicate 'close' handlers
+// -----------------------------------------------------------
 
 import express from 'express';
 import http from 'http';
@@ -8,208 +14,181 @@ import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
 
-// Load environment variables from .env
 dotenv.config();
 
-const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3001;
-const JWT_SECRET = process.env.OCPP_GATEWAY_JWT || process.env.JWT_SECRET || 'supersecret';
+// -- Environment -------------------------------------------------------------
+const PORT = parseInt(process.env.PORT ?? '3000', 10);       // ❶ dynamic
+const JWT_SECRET =
+  process.env.OCPP_GATEWAY_JWT || process.env.JWT_SECRET || 'supersecret';
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3000';
 
-// Store charger connections by chargePointId
+// -- State -------------------------------------------------------------------
 const chargerConnections: Record<string, WebSocket> = {};
 
-// Update charger connection status in backend
-async function updateChargerConnectionStatus(chargePointId: string, isConnected: boolean) {
+// -- Helpers -----------------------------------------------------------------
+async function updateChargerConnectionStatus(
+  chargePointId: string,
+  isConnected: boolean,
+) {
   try {
     await axios.patch(`${BACKEND_URL}/api/charger/connection-status`, {
       chargePointId,
       isConnected,
       lastSeen: new Date().toISOString(),
     });
-    console.log(`[OCPP] Updated charger ${chargePointId} connection status: ${isConnected}`);
+    console.log(
+      `[OCPP] Updated charger ${chargePointId} connection status: ${isConnected}`,
+    );
   } catch (error) {
-    console.error(`[OCPP] Failed to update charger ${chargePointId} connection status:`, error);
+    console.error(
+      `[OCPP] Failed to update charger ${chargePointId} connection status:`,
+      error,
+    );
   }
 }
 
-// --- Express REST API ---
+// -- Express REST API --------------------------------------------------------
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// JWT Auth middleware
-function authenticateJWT(req: express.Request, res: express.Response, next: express.NextFunction): void {
+// JWT middleware
+function authenticateJWT(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction,
+): void {
   const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    res.sendStatus(401);
-    return;
-  }
+  if (!authHeader) return void res.sendStatus(401);
   const token = authHeader.split(' ')[1];
-  jwt.verify(token, JWT_SECRET, (err) => {
-    if (err) {
-      res.sendStatus(403);
-      return;
-    }
-    next();
-  });
+  jwt.verify(token, JWT_SECRET, (err) => (err ? res.sendStatus(403) : next()));
 }
 
-// Health check
-app.get('/health', (req, res) => { res.json({ status: 'ok' }); });
+app.get('/health', (_, res) => res.json({ status: 'ok' }));
 
-// Get connected chargers
-app.get('/api/ocpp/chargers', (req, res) => {
-  const connectedChargers = Object.keys(chargerConnections).map(chargePointId => ({
-    chargePointId,
-    isConnected: chargerConnections[chargePointId].readyState === WebSocket.OPEN,
-  }));
-  res.json(connectedChargers);
-});
+app.get('/api/ocpp/chargers', (_, res) =>
+  res.json(
+    Object.keys(chargerConnections).map((id) => ({
+      chargePointId: id,
+      isConnected: chargerConnections[id].readyState === WebSocket.OPEN,
+    })),
+  ),
+);
 
-// Send OCPP command to charger
 app.post('/api/ocpp/send', authenticateJWT, (req, res) => {
   const { chargePointId, command } = req.body;
   const ws = chargerConnections[chargePointId];
-  if (!ws || ws.readyState !== WebSocket.OPEN) {
-    res.status(404).json({ error: 'Charger not connected' });
-    return;
-  }
+  if (!ws || ws.readyState !== WebSocket.OPEN)
+    return void res.status(404).json({ error: 'Charger not connected' });
   ws.send(JSON.stringify(command));
   res.json({ status: 'sent' });
 });
 
-// Receive OCPP event from charger (for backend to test integration)
-app.post('/api/ocpp/event', (req, res) => {
-  // This endpoint is called by the gateway itself when forwarding events
-  // You can process/store events here if needed
-  res.json({ status: 'received' });
-});
+app.post('/api/ocpp/event', (_, res) => res.json({ status: 'received' }));
 
-// Start REST API server
 const server = http.createServer(app);
 
-// --- OCPP WebSocket Server (same port as HTTP) ---
-// Accept only OCPP 1.6J sub-protocol when it is requested by the client.
-// ABB chargers send `Sec-WebSocket-Protocol: ocpp1.6` during the handshake.
-// If we do not echo it back the charger will immediately abort the connection.
+// -- WebSocket (OCPP‑J) -------------------------------------------------------
 const wss = new WebSocketServer({
   server,
-  handleProtocols: (protocols /* Set<string> */, _request /* IncomingMessage */) => {
-    if (protocols.has('ocpp1.6')) return 'ocpp1.6';
-    // If the charger did not request ocpp1.6 we are not compatible.
-    return false;
+  handleProtocols: (protocols) => {
+    // ❷ trim() ensures “ocpp1.6” is matched even when combined headers are sent
+    for (const p of protocols) if (p.trim() === 'ocpp1.6') return 'ocpp1.6';
+    return false; // incompatible
   },
 });
-console.log(`[OCPP] WebSocket server listening on same port as HTTP (${PORT})`);
+
+console.log(`[OCPP] WebSocket server listening on ${PORT}`);
 
 wss.on('connection', (ws: WebSocket, req: any) => {
-  // Check if this is an OCPP connection (URL should start with /ocpp/)
-  if (!req.url || !req.url.startsWith('/ocpp/')) {
+  // ❸ Allow both ABB default and custom paths
+  if (
+    !req.url ||
+    !(req.url.startsWith('/ocpp/') || req.url.startsWith('/webServices/ocpp/'))
+  ) {
     console.log(`[OCPP] Invalid WebSocket path: ${req.url}`);
-    ws.close(1000, 'Invalid path - OCPP connections must use /ocpp/{chargePointId}');
+    ws.close(1000, 'Invalid path – use /ocpp/{chargePointId}');
     return;
   }
 
-  // Extract chargePointId from URL (e.g., ws://host/ocpp/CP123)
-  const urlParts = req.url.split('/');
-  const chargePointId = urlParts[2] || `cp_${Date.now()}`; // /ocpp/CHARGER_ID
+  const chargePointId = req.url.split('/').pop() || `cp_${Date.now()}`;
   chargerConnections[chargePointId] = ws;
-  console.log(`[OCPP] Charger connected: ${chargePointId} (from ${req.url})`);
+  console.log(`[OCPP] Charger connected: ${chargePointId}`);
 
-  // Update connection status in backend
   updateChargerConnectionStatus(chargePointId, true);
 
   ws.on('message', async (data: any) => {
-    // OCPP-J frames are pure JSON arrays.       
     let frame: any;
     try {
       frame = JSON.parse(data.toString());
-    } catch (e) {
-      console.error('[OCPP] Invalid JSON frame:', data.toString());
-      return;
+    } catch {
+      return console.error('[OCPP] Invalid JSON frame:', data.toString());
     }
-
-    if (!Array.isArray(frame) || frame.length < 3) {
-      console.error('[OCPP] Malformed OCPP frame:', frame);
-      return;
-    }
+    if (!Array.isArray(frame) || frame.length < 3)
+      return console.error('[OCPP] Malformed OCPP frame:', frame);
 
     console.log(`[OCPP] Frame from ${chargePointId}:`, frame);
 
-    const [messageTypeId, uniqueId] = frame;
+    const [typeId, uniqueId] = frame;
 
-    // Handle CALL messages from charger that require immediate CALLRESULT response
-    if (messageTypeId === 2 /* CALL */) {
+    // -- Respond to CALLs -----------------------------------------------------
+    if (typeId === 2 /* CALL */) {
       const action = frame[2];
-
-      let responsePayload: any = {};
+      let payload: any = {};
       switch (action) {
         case 'BootNotification':
-          responsePayload = {
+          payload = {
             status: 'Accepted',
             currentTime: new Date().toISOString(),
-            interval: 300, // seconds until next Heartbeat
+            interval: 300,
           };
           break;
         case 'Heartbeat':
-          responsePayload = {
-            currentTime: new Date().toISOString(),
-          };
+          payload = { currentTime: new Date().toISOString() };
           break;
         case 'StatusNotification':
-          responsePayload = {};
+          payload = {};
           break;
         default:
-          // For unsupported actions we still have to reply with an empty payload to acknowledge.
-          responsePayload = {};
+          payload = {};
       }
-
-      const callResult = [3 /* CALLRESULT */, uniqueId, responsePayload];
-      ws.send(JSON.stringify(callResult));
+      ws.send(JSON.stringify([3 /* CALLRESULT */, uniqueId, payload]));
     }
 
-    // Forward every frame (raw) to backend for persistence/analytics.
+    // -- Mirror to backend ----------------------------------------------------
     try {
       await axios.post(`${BACKEND_URL}/api/ocpp/event`, {
         chargePointId,
         msg: frame,
       });
     } catch (err) {
-      console.error('[OCPP] Failed to forward event to backend:', err);
+      console.error('[OCPP] Failed to forward event:', err);
     }
   });
 
   ws.on('close', () => {
     console.log(`[OCPP] Charger disconnected: ${chargePointId}`);
     delete chargerConnections[chargePointId];
-    
-    // Update connection status in backend
     updateChargerConnectionStatus(chargePointId, false);
   });
 
-  // Send heartbeat every 30 seconds to keep connection alive
-  const heartbeatInterval = setInterval(() => {
-    if (ws.readyState === WebSocket.OPEN) {
-      ws.ping();
-      updateChargerConnectionStatus(chargePointId, true);
-    } else {
-      clearInterval(heartbeatInterval);
-    }
-  }, 30000);
-
-  ws.on('close', () => {
-    clearInterval(heartbeatInterval);
-  });
+  // Heartbeat (keep‑alive for proxies)
+  const hb = setInterval(() => {
+    if (ws.readyState === WebSocket.OPEN) ws.ping();
+    else clearInterval(hb);
+  }, 30_000);
 });
 
 server.listen(PORT, () => {
-  console.log(`[REST] API server listening on http://localhost:${PORT}`);
-  console.log(`[OCPP] WebSocket server ready at ws://localhost:${PORT}/ocpp/`);
+  console.log(`[REST] HTTP API listening on :${PORT}`);
+  console.log(
+    `[OCPP] WS endpoint ready at wss://<host>/ocpp/{chargePointId} (or /webServices/ocpp/{id})`,
+  );
 });
 
-// --- Notes ---
-// - Use HTTPS/WSS in production (Railway will provide SSL termination)
-// - Set PORT, OCPP_GATEWAY_JWT, BACKEND_URL in environment variables
-// - Use /api/ocpp/send to send commands to chargers
-// - OCPP message parsing/validation should be extended for production use
-// - Chargers connect TO this gateway using: wss://gateway-url/ocpp/{chargePointId} 
+// ---------------------------------------------------------------------------
+// Deployment checklist
+//   • Remove PORT and WSS_PORT variables in Railway; let it inject PORT.
+//   • Use TerraConfig endpoint: wss://ocpp-server-production.up.railway.app/ocpp/TACW2241224T0192
+//   • Redeploy, reboot charger, verify /api/ocpp/chargers shows the device.
+// ---------------------------------------------------------------------------
